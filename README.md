@@ -1,14 +1,14 @@
 # Project : Checkout Project
 ​
-https://voltran-project.vercel.app/
+https://checkoutpage-project.netlify.app/
 
 ## Description
 ​
-Created a simple comic book serial site using HTML and CSS
+It is a project created with Javascript, where the user can see the amount of products and the total payment price on the payment page.
 ​
-## Project image
+## Project GIF
 ​
-![proje image](/Ekran%20Resmi%202022-09-27%2015.11.28.png)
+![proje image](/img/checkout_app.gif)
 
 ## Technologies used
 ​
@@ -16,7 +16,9 @@ Created a simple comic book serial site using HTML and CSS
 ​
 - CSS
 
+- JS
+
 
 ## Project clone link
 ​
-https://github.com/HilalVildan/VOLTRAN.git
+https://github.com/HilalVildan/Checkout-Project.git
