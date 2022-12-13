@@ -2,8 +2,8 @@
 //*                 Checkout Page Solution
 //*  map filter, dest,spread==============================================
 //!table da kullanılacak değişkenler
-const kargo = 15.0;
-const vergi = 0.18;
+const shipping = 15.0;
+const tax = 0.18;
 
 let basket = [
   { name: "Vintage Backpack", price: 34.99, piece: 1, img: "./img/photo1.png" },
@@ -34,7 +34,7 @@ basket.forEach((product) => {
         
              <div class="product-price">
                     <p class="text-warning h2">$
-                      <span class="indirim-price">${(price * 0.7).toFixed(
+                      <span class="sale-price">${(price * 0.7).toFixed(
                         2
                       )}</span>
                       <span class="h5 text-dark text-decoration-line-through">${price} </span>
@@ -64,7 +64,7 @@ basket.forEach((product) => {
                   </div>
 
                   <div class="mt-2">
-                    product Toplam: $<span class="product-toplam">${(
+                    product Total: $<span class="product-total">${(
                       price *
                       0.7 *
                       piece
@@ -108,26 +108,26 @@ pieceButon();
 document.querySelector("#pay-table").innerHTML = `<table class="table">
             <tbody>
               <tr class="text-end">
-                <th class="text-start">Aratoplam</th>
-                <td>$<span class="aratoplam">0.00</span></td>
+                <th class="text-start">Subtotal</th>
+                <td>$<span class="subtotal">0.00</span></td>
               </tr>
               <tr class="text-end">
-                <th class="text-start">Vergi(18%)</th>
-                <td>$<span class="vergi">0.00</span></td>
+                <th class="text-start">Tax(18%)</th>
+                <td>$<span class="tax">0.00</span></td>
               </tr>
               <tr class="text-end">
-                <th class="text-start">Kargo</th>
-                <td>$<span class="kargo">0.00</span></td>
+                <th class="text-start">Shipping</th>
+                <td>$<span class="shipping">0.00</span></td>
               </tr>
               <tr class="text-end">
-                <th class="text-start">Toplam</th>
-                <td>$<span class="toplam">0.00</span></td>
+                <th class="text-start">Total</th>
+                <td>$<span class="total">0.00</span></td>
               </tr>
             </tbody>
           </table>`;
 
 //******************************** */
-hesaplaCardTotal();
+calculateCardTotal();
 
 function pieceButon() {
   //!burada - piece ve + elementlerle işim olduğu için, mesela - ye basınca piece (kardeşi) değişsin istediğim için, minus a ulaşıp ona tıklanınca closest ile parent ına oradan da kardeşine ulaş eksilt diyebiliriz. ya da gerekli elementlerin parent ına ulaşıp çocuklarına adlar verip, artık o adlarla işlem yapabiliriz
@@ -150,12 +150,12 @@ function pieceButon() {
         }
       });
       console.log(basket);
-      //!product toplam ı ekrana bastırma (her product card ında var)
-      piece1.closest(".row").querySelector(".product-toplam").textContent =
-        piece1.closest(".row").querySelector(".indirim-price").textContent *
+      //!product total ı ekrana bastırma (her product card ında var)
+      piece1.closest(".row").querySelector(".product-total").textContent =
+        piece1.closest(".row").querySelector(".sale-price").textContent *
         piece1.textContent;
       //?????????????????????????????
-      hesaplaCardTotal();
+      calculateCardTotal();
 
       //!eğer piece 1 iken tekrar minus a basılırsa o productü sil (minus butonu removeSil fonksiyonuna gitsin parent ını silsin)
       if (piece1.textContent < 1) {
@@ -178,37 +178,37 @@ function pieceButon() {
           product.piece = Number(piece1.textContent);
         console.log(basket);
       });
-      //!product toplam ekrana bastırması. her productde olan toplam kısmı
-      piece1.closest(".row").querySelector(".product-toplam").textContent = (
-        piece1.closest(".row").querySelector(".indirim-price").textContent *
+      //!product total ekrana bastırması. her productde olan total kısmı
+      piece1.closest(".row").querySelector(".product-total").textContent = (
+        piece1.closest(".row").querySelector(".sale-price").textContent *
         piece1.textContent
       ).toFixed(2);
-      hesaplaCardTotal();
+      calculateCardTotal();
     };
   });
 }
 //! Calculate and update card total values
-function hesaplaCardTotal() {
-  //! her bir card daki product toplam kısımları
-  const productToplam = document.querySelectorAll(".product-toplam");
+function calculateCardTotal() {
+  //! her bir card daki product total kısımları
+  const productTotal = document.querySelectorAll(".product-total");
 
   //!  Bir NodeListnesne, bir belgeden çıkarılan düğümlerin bir listesidir
 
-  //? araToplam= en alttaki tüm productler için vergi kargo hariç sepettekiler fiyatı
+  //? araTotal= en alttaki tüm productler için vergi kargo(shipping) hariç sepettekiler fiyatı
   //?Reduce tam olarak Array istiyor, nodelist yeterli değil
 
   //*önce hesapla sonra altta browser a (DOM) bastır
-  //  console.log([...productToplam]);
-  const araToplam = Array.from(productToplam).reduce(
+  //  console.log([...productTotal]);
+  const subTotal = Array.from(productTotal).reduce(
     (acc, item) => acc + Number(item.textContent),
     0
   );
-  const vergiPrice = araToplam * vergi;
-  const shipping = araToplam > 0 ? kargo : 0;
-  const cardTotal = araToplam + shipping + vergiPrice;
+  const taxPrice = subTotal * tax;
+  const shipping = subTotal > 0 ? shipping : 0;
+  const cardTotal = subTotal + shipping + taxPrice;
 
-  document.querySelector(".aratoplam").textContent = araToplam.toFixed(2);
-  document.querySelector(".vergi").textContent = vergiPrice.toFixed(2);
-  document.querySelector(".kargo").textContent = shipping.toFixed(2);
-  document.querySelector(".toplam").textContent = cardTotal.toFixed(2);
+  document.querySelector(".subtotal").textContent = subTotal.toFixed(2);
+  document.querySelector(".tax").textContent = taxPrice.toFixed(2);
+  document.querySelector(".shipping").textContent = shipping.toFixed(2);
+  document.querySelector(".total").textContent = cardTotal.toFixed(2);
 }
