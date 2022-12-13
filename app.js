@@ -5,19 +5,19 @@
 const kargo = 15.0;
 const vergi = 0.18;
 
-let sepettekiler = [
-  { name: "Vintage Backpack", price: 34.99, adet: 1, img: "./img/photo1.png" },
-  { name: "Levi Shoes", price: 40.99, adet: 1, img: "./img/photo2.png" },
-  { name: "Antique Clock", price: 69.99, adet: 1, img: "./img/photo3.jpg" },
+let basket = [
+  { name: "Vintage Backpack", price: 34.99, piece: 1, img: "./img/photo1.png" },
+  { name: "Levi Shoes", price: 40.99, piece: 1, img: "./img/photo2.png" },
+  { name: "Antique Clock", price: 69.99, piece: 1, img: "./img/photo3.jpg" },
 ];
 
 //!EKRANA BASTIRMA
-sepettekiler.forEach((ürün) => {
+basket.forEach((product) => {
   //!DESTRUCTURİNG
-  const { name, price, adet, img } = ürün;
+  const { name, price, piece, img } = product;
 
   document.querySelector(
-    "#urun-rowlari"
+    "#product-rows"
   ).innerHTML += `<div class="card mb-3" style="max-width: 540px;">
 
   <div class="row g-0">
@@ -32,7 +32,7 @@ sepettekiler.forEach((ürün) => {
       
         <h5 class="card-title">${name}</h5>
         
-             <div class="ürün-price">
+             <div class="product-price">
                     <p class="text-warning h2">$
                       <span class="indirim-price">${(price * 0.7).toFixed(
                         2
@@ -45,11 +45,11 @@ sepettekiler.forEach((ürün) => {
                   <div
                     class="border border-1 border-dark shadow-lg d-flex justify-content-center p-2"
                   >
-                    <div class="adet-controller">
+                    <div class="piece-controller">
                       <button class="btn btn-secondary btn-sm minus">
                         <i class="fas fa-minus"></i>
                       </button>
-                      <p class="d-inline mx-4" id="ürün-adet">${adet}</p>
+                      <p class="d-inline mx-4" id="product-piece">${piece}</p>
                       <button class="btn btn-secondary btn-sm">
                         <i class="fas fa-plus"></i>
                       </button>
@@ -57,17 +57,17 @@ sepettekiler.forEach((ürün) => {
 
                   </div>
 
-                  <div class="ürün-removal mt-4">
-                    <button class="btn btn-danger btn-sm w-100 remove-ürün">
+                  <div class="product-removal mt-4">
+                    <button class="btn btn-danger btn-sm w-100 remove-product">
                       <i class="fa-solid fa-trash-can me-2"></i>Remove
                     </button>
                   </div>
 
                   <div class="mt-2">
-                    Ürün Toplam: $<span class="ürün-toplam">${(
+                    product Toplam: $<span class="product-toplam">${(
                       price *
                       0.7 *
-                      adet
+                      piece
                     ).toFixed(2)}</span>
                   </div>
       </div>
@@ -77,13 +77,13 @@ sepettekiler.forEach((ürün) => {
 });
 
 //!SİLME
-document.querySelectorAll(".remove-ürün").forEach((btn) => {
+document.querySelectorAll(".remove-product").forEach((btn) => {
   btn.onclick = () => {
-    removeSil(btn);
+    removeDelete(btn);
   };
 });
 
-function removeSil(btn) {
+function removeDelete(btn) {
   //!ekrandan sildik
   //* btn.parentElement.parentElement.parentElement.parentElement.parentElement.remove()
 
@@ -93,18 +93,19 @@ function removeSil(btn) {
   //!diziden sildik
   console.log(btn.closest(".card").querySelector("h5").textContent);
 
-  sepettekiler = sepettekiler.filter(
-    (ürün) => ürün.name != btn.closest(".card").querySelector("h5").textContent
+  basket = basket.filter(
+    (product) =>
+      product.name != btn.closest(".card").querySelector("h5").textContent
   );
-  console.log(sepettekiler);
+  console.log(basket);
 }
 
-//!ADET DEĞİŞTİRME
+//!adet DEĞİŞTİRME
 
-adetButon();
+pieceButon();
 
 //!todo browser da en alttaki total kısmı
-document.querySelector("#odeme-table").innerHTML = `<table class="table">
+document.querySelector("#pay-table").innerHTML = `<table class="table">
             <tbody>
               <tr class="text-end">
                 <th class="text-start">Aratoplam</th>
@@ -128,58 +129,59 @@ document.querySelector("#odeme-table").innerHTML = `<table class="table">
 //******************************** */
 hesaplaCardTotal();
 
-function adetButon() {
-  //!burada - adet ve + elementlerle işim olduğu için, mesela - ye basınca adet (kardeşi) değişsin istediğim için, minus a ulaşıp ona tıklanınca closest ile parent ına oradan da kardeşine ulaş eksilt diyebiliriz. ya da gerekli elementlerin parent ına ulaşıp çocuklarına adlar verip, artık o adlarla işlem yapabiliriz
-  document.querySelectorAll(".adet-controller").forEach((kutu) => {
+function pieceButon() {
+  //!burada - piece ve + elementlerle işim olduğu için, mesela - ye basınca piece (kardeşi) değişsin istediğim için, minus a ulaşıp ona tıklanınca closest ile parent ına oradan da kardeşine ulaş eksilt diyebiliriz. ya da gerekli elementlerin parent ına ulaşıp çocuklarına adlar verip, artık o adlarla işlem yapabiliriz
+  document.querySelectorAll(".piece-controller").forEach((kutu) => {
     const minus = kutu.firstElementChild;
-    const adet1 = kutu.querySelector("#ürün-adet");
+    const piece1 = kutu.querySelector("#product-piece");
 
     minus.onclick = () => {
-      //!minus adet değişimini ekrana bastır
-      adet1.textContent = adet1.textContent - 1;
+      //!minus piece değişimini ekrana bastır
+      piece1.textContent = piece1.textContent - 1;
 
-      //!sepettekiler de adet değişimini yapalım
+      //!sepettekiler de piece değişimini yapalım
 
-      sepettekiler.map((ürün) => {
+      basket.map((product) => {
         if (
-          ürün.name == adet1.closest(".card").querySelector("h5").textContent
+          product.name ==
+          piece1.closest(".card").querySelector("h5").textContent
         ) {
-          ürün.adet = Number(adet1.textContent);
+          product.piece = Number(piece1.textContent);
         }
       });
-      console.log(sepettekiler);
-      //!ürün toplam ı ekrana bastırma (her ürün card ında var)
-      adet1.closest(".row").querySelector(".ürün-toplam").textContent =
-        adet1.closest(".row").querySelector(".indirim-price").textContent *
-        adet1.textContent;
+      console.log(basket);
+      //!product toplam ı ekrana bastırma (her product card ında var)
+      piece1.closest(".row").querySelector(".product-toplam").textContent =
+        piece1.closest(".row").querySelector(".indirim-price").textContent *
+        piece1.textContent;
       //?????????????????????????????
       hesaplaCardTotal();
 
-      //!eğer adet 1 iken tekrar minus a basılırsa o ürünü sil (minus butonu removeSil fonksiyonuna gitsin parent ını silsin)
-      if (adet1.textContent < 1) {
-        alert("sileyim mi");
-        removeSil(minus);
+      //!eğer piece 1 iken tekrar minus a basılırsa o productü sil (minus butonu removeSil fonksiyonuna gitsin parent ını silsin)
+      if (piece1.textContent < 1) {
+        alert("Delete?");
+        removeDelete(minus);
       }
     };
 
     //! plus a basınca minus a benzer işlemler
     const plus = kutu.lastElementChild;
     plus.onclick = () => {
-      adet1.textContent = Number(adet1.textContent) + 1;
+      piece1.textContent = Number(piece1.textContent) + 1;
       //????????????????????????????????????BU KISIM HEM MİNUS HEM PLUS TA VAR FONKSİYON A ATILABİLİR
       //!diziyi güncelle
-      sepettekiler.map((ürün) => {
+      basket.map((product) => {
         if (
-          ürün.name ==
-          adet1.closest(".row").querySelector(".card-title").textContent
+          product.name ==
+          piece1.closest(".row").querySelector(".card-title").textContent
         )
-          ürün.adet = Number(adet1.textContent);
-        console.log(sepettekiler);
+          product.piece = Number(piece1.textContent);
+        console.log(basket);
       });
-      //!ürün toplam ekrana bastırması. her üründe olan toplam kısmı
-      adet1.closest(".row").querySelector(".ürün-toplam").textContent = (
-        adet1.closest(".row").querySelector(".indirim-price").textContent *
-        adet1.textContent
+      //!product toplam ekrana bastırması. her productde olan toplam kısmı
+      piece1.closest(".row").querySelector(".product-toplam").textContent = (
+        piece1.closest(".row").querySelector(".indirim-price").textContent *
+        piece1.textContent
       ).toFixed(2);
       hesaplaCardTotal();
     };
@@ -187,17 +189,17 @@ function adetButon() {
 }
 //! Calculate and update card total values
 function hesaplaCardTotal() {
-  //! her bir card daki ürün toplam kısımları
-  const ürünToplam = document.querySelectorAll(".ürün-toplam");
+  //! her bir card daki product toplam kısımları
+  const productToplam = document.querySelectorAll(".product-toplam");
 
   //!  Bir NodeListnesne, bir belgeden çıkarılan düğümlerin bir listesidir
 
-  //? araToplam= en alttaki tüm ürünler için vergi kargo hariç sepettekiler fiyatı
+  //? araToplam= en alttaki tüm productler için vergi kargo hariç sepettekiler fiyatı
   //?Reduce tam olarak Array istiyor, nodelist yeterli değil
 
   //*önce hesapla sonra altta browser a (DOM) bastır
-  //  console.log([...ürünToplam]);
-  const araToplam = Array.from(ürünToplam).reduce(
+  //  console.log([...productToplam]);
+  const araToplam = Array.from(productToplam).reduce(
     (acc, item) => acc + Number(item.textContent),
     0
   );
