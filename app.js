@@ -2,7 +2,7 @@
 //*                 Checkout Page Solution
 //*  map filter, dest,spread==============================================
 //!table da kullanılacak değişkenler
-const shipping = 15.0;
+const kargo = 15.0;
 const tax = 0.18;
 
 let basket = [
@@ -64,11 +64,11 @@ basket.forEach((product) => {
                   </div>
 
                   <div class="mt-2">
-                    product Total: $<span class="product-total">${(
-                      price *
-                      0.7 *
-                      piece
-                    ).toFixed(2)}</span>
+                   Product Total: $<span class="product-total">${(
+                     price *
+                     0.7 *
+                     piece
+                   ).toFixed(2)}</span>
                   </div>
       </div>
     </div>
@@ -98,14 +98,15 @@ function removeDelete(btn) {
       product.name != btn.closest(".card").querySelector("h5").textContent
   );
   console.log(basket);
+  calculateCardTotal();
 }
 
-//!adet DEĞİŞTİRME
+//!ADET DEĞİŞTİRME
 
 pieceButon();
 
 //!todo browser da en alttaki total kısmı
-document.querySelector("#pay-table").innerHTML = `<table class="table">
+document.querySelector("#odeme-table").innerHTML = `<table class="table">
             <tbody>
               <tr class="text-end">
                 <th class="text-start">Subtotal</th>
@@ -117,7 +118,7 @@ document.querySelector("#pay-table").innerHTML = `<table class="table">
               </tr>
               <tr class="text-end">
                 <th class="text-start">Shipping</th>
-                <td>$<span class="shipping">0.00</span></td>
+                <td>$<span class="kargo">0.00</span></td>
               </tr>
               <tr class="text-end">
                 <th class="text-start">Total</th>
@@ -130,16 +131,16 @@ document.querySelector("#pay-table").innerHTML = `<table class="table">
 calculateCardTotal();
 
 function pieceButon() {
-  //!burada - piece ve + elementlerle işim olduğu için, mesela - ye basınca piece (kardeşi) değişsin istediğim için, minus a ulaşıp ona tıklanınca closest ile parent ına oradan da kardeşine ulaş eksilt diyebiliriz. ya da gerekli elementlerin parent ına ulaşıp çocuklarına adlar verip, artık o adlarla işlem yapabiliriz
-  document.querySelectorAll(".piece-controller").forEach((kutu) => {
-    const minus = kutu.firstElementChild;
-    const piece1 = kutu.querySelector("#product-piece");
+  //!burada - adet(piece) ve + elementlerle işim olduğu için, mesela - ye basınca piece (kardeşi) değişsin istediğim için, minus a ulaşıp ona tıklanınca closest ile parent ına oradan da kardeşine ulaş eksilt diyebiliriz. ya da gerekli elementlerin parent ına ulaşıp çocuklarına adlar verip, artık o adlarla işlem yapabiliriz
+  document.querySelectorAll(".piece-controller").forEach((i) => {
+    const minus = i.firstElementChild;
+    const piece1 = i.querySelector("#product-piece");
 
     minus.onclick = () => {
-      //!minus piece değişimini ekrana bastır
+      //!minus adet değişimini ekrana bastır
       piece1.textContent = piece1.textContent - 1;
 
-      //!sepettekiler de piece değişimini yapalım
+      //!sepettekiler de adet değişimini yapalım
 
       basket.map((product) => {
         if (
@@ -150,14 +151,14 @@ function pieceButon() {
         }
       });
       console.log(basket);
-      //!product total ı ekrana bastırma (her product card ında var)
-      piece1.closest(".row").querySelector(".product-total").textContent =
+      //!ürün total ı ekrana bastırma (her ürün card ında var)
+      piece1.closest(".row").querySelector(".product-total").textContent = (
         piece1.closest(".row").querySelector(".sale-price").textContent *
-        piece1.textContent;
+        piece1.textContent).toFixed(2);
       //?????????????????????????????
       calculateCardTotal();
 
-      //!eğer piece 1 iken tekrar minus a basılırsa o productü sil (minus butonu removeSil fonksiyonuna gitsin parent ını silsin)
+      //!eğer adet 1 iken tekrar minus a basılırsa o ürünü sil (minus butonu removeDelete fonksiyonuna gitsin parent ını silsin)
       if (piece1.textContent < 1) {
         alert("Delete?");
         removeDelete(minus);
@@ -165,7 +166,7 @@ function pieceButon() {
     };
 
     //! plus a basınca minus a benzer işlemler
-    const plus = kutu.lastElementChild;
+    const plus = i.lastElementChild;
     plus.onclick = () => {
       piece1.textContent = Number(piece1.textContent) + 1;
       //????????????????????????????????????BU KISIM HEM MİNUS HEM PLUS TA VAR FONKSİYON A ATILABİLİR
@@ -178,7 +179,7 @@ function pieceButon() {
           product.piece = Number(piece1.textContent);
         console.log(basket);
       });
-      //!product total ekrana bastırması. her productde olan total kısmı
+      //!ürün total ekrana bastırması. her üründe olan total kısmı
       piece1.closest(".row").querySelector(".product-total").textContent = (
         piece1.closest(".row").querySelector(".sale-price").textContent *
         piece1.textContent
@@ -189,26 +190,26 @@ function pieceButon() {
 }
 //! Calculate and update card total values
 function calculateCardTotal() {
-  //! her bir card daki product total kısımları
-  const productTotal = document.querySelectorAll(".product-total");
+  //! her bir card daki ürün total kısımları
+  const producttotal = document.querySelectorAll(".product-total");
 
   //!  Bir NodeListnesne, bir belgeden çıkarılan düğümlerin bir listesidir
 
-  //? araTotal= en alttaki tüm productler için vergi kargo(shipping) hariç sepettekiler fiyatı
+  //? aratotal(subTotal)= en alttaki tüm ürünler için vergi (tax) kargo hariç sepettekiler(basket) fiyatı
   //?Reduce tam olarak Array istiyor, nodelist yeterli değil
 
   //*önce hesapla sonra altta browser a (DOM) bastır
-  //  console.log([...productTotal]);
-  const subTotal = Array.from(productTotal).reduce(
+  //  console.log([...producttotal]);
+  const subTotal = Array.from(producttotal).reduce(
     (acc, item) => acc + Number(item.textContent),
     0
   );
   const taxPrice = subTotal * tax;
-  const shipping = subTotal > 0 ? shipping : 0;
+  const shipping = subTotal > 0 ? kargo : 0;
   const cardTotal = subTotal + shipping + taxPrice;
 
   document.querySelector(".subtotal").textContent = subTotal.toFixed(2);
   document.querySelector(".tax").textContent = taxPrice.toFixed(2);
-  document.querySelector(".shipping").textContent = shipping.toFixed(2);
+  document.querySelector(".kargo").textContent = shipping.toFixed(2);
   document.querySelector(".total").textContent = cardTotal.toFixed(2);
 }
