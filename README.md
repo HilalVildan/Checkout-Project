@@ -13,8 +13,6 @@ It is a project created with Javascript, where the user can see the amount of pr
 ## Technologies used
 ​
 - HTML
-​
-- CSS
 
 - JS
 
